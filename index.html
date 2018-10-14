@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>Rock, Paper, Scissors</title>
+</head>
+<body>
+    <script>
+        function cpuPlays(){
+            switch(Math.floor(Math.random()*3)){
+                case 0: return "Rock";
+                case 1: return "Paper";
+                case 2: return "Scissors";
+            }
+        }
+
+        function playRound(playerSelec, cpuSelec){
+            switch(true){
+                case playerSelec == cpuSelec: 
+                    return 0;
+                case playerSelec == "Rock" && cpuSelec == "Scissors"
+                    || playerSelec == "Paper" && cpuSelec == "Rock"
+                    || playerSelec == "Scissors" && cpuSelec == "Paper":
+                    return 1;
+                default:
+                    return -1;
+            }
+        }
+
+        function game(){
+
+            let playerScore = 0;
+            let cpuScore = 0;
+            let result;
+
+            for(n = 5; n > 0; n--){
+                let playerSelec;
+                let cpuSelec = cpuPlays();
+
+                do{
+                playerSelec = prompt("Make your choice!");
+                playerSelec = playerSelec.charAt(0).toUpperCase() + playerSelec.slice(1).toLowerCase();
+                }while(!(playerSelec == "Rock" ||
+                         playerSelec == "Paper" ||
+                         playerSelec == "Scissors"));
+                
+                result = playRound(playerSelec, cpuSelec);
+
+                switch(result){
+                    case 0: 
+                        do{
+                            console.log("Draw!")
+
+                            playerSelec = prompt("Play Again!");
+                            playerSelec = playerSelec.charAt(0).toUpperCase() + playerSelec.slice(1).toLowerCase();
+                            cpuSelec = cpuPlays();
+                            
+                            result = playRound(playerSelec, cpuSelec);
+                        }while(result == 0);
+                    case 1:
+                        console.log("You win! " + playerSelec + " beats " + cpuSelec + ".");
+                        playerScore++;
+                        break;
+                    case -1:
+                        console.log("You lose! " + cpuSelec + " beats " + playerSelec + ".");
+                        cpuScore++;
+                        break;
+                }
+
+                console.log("Score : " + playerScore + " - " + cpuScore);
+            }
+
+            switch(true){
+                case playerScore > cpuScore: console.log("Total Victory!"); break;
+                case playerScore < cpuScore: console.log("Defeat!"); break;
+            }
+        }
+
+        game();
+
+    </script>
+</body>
+</html>
