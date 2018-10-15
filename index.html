@@ -3,79 +3,97 @@
     <title>Rock, Paper, Scissors</title>
 </head>
 <body>
-    <script>
-        function cpuPlays(){
-            switch(Math.floor(Math.random()*3)){
-                case 0: return "Rock";
-                case 1: return "Paper";
-                case 2: return "Scissors";
-            }
+<div>
+    <button id='Rock'>Rock</button>
+    <button id='Paper'>Paper</button>
+    <button id='Scissors'>Scissors</button>
+</div>
+<div class='results'></div>
+<div class='score'></div>
+
+<script>
+
+    function cpuPlays(){
+        switch(Math.floor(Math.random()*3)){
+            case 0: return "Rock";
+            case 1: return "Paper";
+            case 2: return "Scissors";
         }
+    }
 
-        function playRound(playerSelec, cpuSelec){
-            switch(true){
-                case playerSelec == cpuSelec: 
-                    return 0;
-                case playerSelec == "Rock" && cpuSelec == "Scissors"
-                    || playerSelec == "Paper" && cpuSelec == "Rock"
-                    || playerSelec == "Scissors" && cpuSelec == "Paper":
-                    return 1;
-                default:
-                    return -1;
-            }
+    function playRound(playerSelec, cpuSelec){
+        const results = document.querySelector('.results');
+
+        switch(true){
+            case playerSelec == cpuSelec: 
+
+                results.textContent = "Draw!";
+                return 'null';
+
+            case playerSelec == "Rock" && cpuSelec == "Scissors"
+                || playerSelec == "Paper" && cpuSelec == "Rock"
+                || playerSelec == "Scissors" && cpuSelec == "Paper":
+
+                results.textContent = "You win!";
+                return 'player';
+
+            default:
+
+                results.textContent = "You lose.";
+                return 'cpu';
         }
+    }
 
-        function game(){
+    function score(pScore, cpuScore){
+        const score = document.querySelector('.score');
 
-            let playerScore = 0;
-            let cpuScore = 0;
-            let result;
+        score.textContent = "Score : " + pScore + " - " + cpuScore;
 
-            for(n = 5; n > 0; n--){
-                let playerSelec;
+        if(pScore == 5){
+            let announcement = document.createElement('p');
+            announcement.textContent = "Congratulation! You won!";
+            score.appendChild(announcement);
+            return 'reset';
+        }
+        if(cpuScore == 5){
+            let announcement = document.createElement('p');
+            announcement.textContent = "You lost. Better luck next time!";
+            score.appendChild(announcement);
+            return 'reset';
+        }
+        
+    }
+
+    function main(){
+        const buttons = document.querySelectorAll('button');
+        let winner = "null";
+        let r;
+
+        let pScore = 0;
+        let cpuScore = 0;
+        score(pScore,cpuScore);
+
+        buttons.forEach((button) => {
+            button.addEventListener('click', () => {
                 let cpuSelec = cpuPlays();
+                winner = playRound(button.id, cpuSelec);
 
-                do{
-                playerSelec = prompt("Make your choice!");
-                playerSelec = playerSelec.charAt(0).toUpperCase() + playerSelec.slice(1).toLowerCase();
-                }while(!(playerSelec == "Rock" ||
-                         playerSelec == "Paper" ||
-                         playerSelec == "Scissors"));
-                
-                result = playRound(playerSelec, cpuSelec);
+                if(winner == 'player') pScore++;
+                if(winner == 'cpu') cpuScore++;
 
-                switch(result){
-                    case 0: 
-                        do{
-                            console.log("Draw!")
-
-                            playerSelec = prompt("Play Again!");
-                            playerSelec = playerSelec.charAt(0).toUpperCase() + playerSelec.slice(1).toLowerCase();
-                            cpuSelec = cpuPlays();
-                            
-                            result = playRound(playerSelec, cpuSelec);
-                        }while(result == 0);
-                    case 1:
-                        console.log("You win! " + playerSelec + " beats " + cpuSelec + ".");
-                        playerScore++;
-                        break;
-                    case -1:
-                        console.log("You lose! " + cpuSelec + " beats " + playerSelec + ".");
-                        cpuScore++;
-                        break;
+                r = score(pScore,cpuScore);
+                if(r == 'reset'){
+                    pScore = 0;
+                    cpuScore = 0;
                 }
+                });  
+            });
+    }
 
-                console.log("Score : " + playerScore + " - " + cpuScore);
-            }
+    main();
 
-            switch(true){
-                case playerScore > cpuScore: console.log("Total Victory!"); break;
-                case playerScore < cpuScore: console.log("Defeat!"); break;
-            }
-        }
 
-        game();
+</script>
 
-    </script>
 </body>
 </html>
